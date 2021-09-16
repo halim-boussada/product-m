@@ -2,20 +2,20 @@ const mongoose = require("mongoose");
 const db = require("./connect.js");
 mongoose.Promise = global.Promise;
 
-const ProductsSchema = new mongoose.Schema(
+const PreProductsSchema = new mongoose.Schema(
   {
     name: String,
     desription: String,
     image: String,
-    type: Number,
+    type: String,
     number: Number,
-    type: { type: String, default: "Products" },
+    type: { type: String, default: "PreProducts" },
   },
   {
     timestamps: true,
   }
 );
 
-const Products = mongoose.model("Products", ProductsSchema);
+const PreProducts = mongoose.model("PreProducts", PreProductsSchema);
 
-module.exports = Products;
+module.exports = PreProducts;

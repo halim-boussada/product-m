@@ -6,6 +6,8 @@ var bodyParser = require("body-parser");
 const multer = require("multer");
 const Order = require("./database/order.js");
 const Product = require("./database/product.js");
+const PreProduct = require("./database/preProducts.js");
+
 const Users = require("./database/users.js");
 
 app.use(cors());
@@ -61,6 +63,27 @@ app.post("/api/login", (req, res) => {
     }
   );
 });
+
+app.get("/api/findUser/:id", (req, res) => {
+  Users.findOne({ _id: req.params.id }, (error, result) => {
+    if (error) console.log("this is error ====>", error);
+    res.send(result);
+  });
+});
+
+// pre products //
+app.get("/api/preproducts", (req, res) => {
+  PreProduct.find({}, function (error, result) {
+    if (error) console.log("this is error ====>", error);
+    res.send(result);
+  });
+});
+app.post("/api/preproducts", (req, res) => {
+  const newM = new PreProduct(req.body);
+  newM.save((err, result) => {
+    res.send({ body: "ok" });
+  });
+});
 // Crud Products //
 app.get("/api/products", (req, res) => {
   Product.find({}, function (error, result) {
@@ -95,6 +118,14 @@ app.get("/api/orders", (req, res) => {
     res.send(result);
   });
 });
+
+app.get("/api/orders/:id", (req, res) => {
+  Order.find({ username: req.params.id }, function (error, result) {
+    if (error) console.log("this is error ====>", error);
+    res.send(result);
+  });
+});
+
 app.post("/api/orders", (req, res) => {
   const newM = new Order(req.body);
   newM.save((err, result) => {
@@ -107,13 +138,23 @@ app.put("/api/orders/:id", (req, res) => {
     res.send({ result: "done" });
   });
 });
+
+app.put("/api/answer/:id", (req, res) => {
+  Order.updateOne(
+    { _id: req.params.id },
+    { status: req.body.answer },
+    function (error, result) {
+      if (error) console.log("this is error ====>", error);
+      res.send({ result: "done" });
+    }
+  );
+});
 app.delete("/api/orders/:id", (req, res) => {
   Order.deleteOne({ _id: req.params.id }, function (error, result) {
     if (error) console.log("this is error ====>", error);
     res.send(result);
   });
 });
-
 var hash = function (pw) {
   var hash = 0;
   if (this.length == 0) {
@@ -136,5 +177,5 @@ app.post("/admin/login", (req, res) => {
 });
 // end orders crud //
 app.listen(process.env.PORT || 3000, () => {
-  console.log("hahaha");
+  console.log("server is running on http://localhost:3000");
 });

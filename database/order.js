@@ -10,6 +10,7 @@ const OrderssSchema = new mongoose.Schema(
     number: String,
     order: String,
     total: Number,
+    status : String , 
     type: { type: String, default: "Orders" },
   },
   {

@@ -21,7 +21,10 @@ export class SigninComponent implements OnInit {
         if (data["msg"]) {
           alert("wrong password");
         } else {
-          localStorage.setItem("user", data["username"]);
+          localStorage.setItem("user", data["_id"]);
+          localStorage.setItem("auth", "user");
+
+
           this.router.navigateByUrl("/products");
         }
       });
