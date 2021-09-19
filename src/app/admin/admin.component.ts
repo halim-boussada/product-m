@@ -22,6 +22,7 @@ export class AdminComponent implements OnInit {
   see: any = false;
   hold: any;
   modify: any = false;
+  type: any = false;
   ngOnInit(): void {
     if (localStorage.getItem("auth") !== "admin") {
       this.router.navigateByUrl("/admin/login");
@@ -34,7 +35,7 @@ export class AdminComponent implements OnInit {
         this.products = data;
       });
     this.http
-      .get(`${environment.URL}/api/preproducts`, {
+      .get(`${environment.URL}/api/type`, {
         responseType: "json",
       })
       .subscribe((data) => {
@@ -56,17 +57,25 @@ export class AdminComponent implements OnInit {
 
     document.getElementById("date").style.display = "block";
   }
+
   toggle(option) {
     if (option) {
       this.crud = true;
       this.orders = false;
+      this.type = false;
+
       this.modify = this.modify ? false : true;
     } else {
       this.orders = true;
       this.crud = false;
+      this.type = false;
     }
   }
-
+  typee() {
+    this.orders = false;
+    this.crud = false;
+    this.type = true;
+  }
   dis() {
     this.router.navigateByUrl("/admin/login");
     localStorage.setItem("auth", "");
@@ -82,15 +91,8 @@ export class AdminComponent implements OnInit {
   }
 
   add(product) {
-    var newp = {};
-    for (var i = 0; i < this.preproducts.length; i++) {
-      if (this.preproducts[i].name === product) {
-        newp = this.preproducts[i];
-      }
-    }
-
     this.http
-      .post(`${environment.URL}/api/products`, newp, {
+      .post(`${environment.URL}/api/products`, product, {
         responseType: "json",
       })
       .subscribe((data) => {
@@ -125,6 +127,73 @@ export class AdminComponent implements OnInit {
       if (result.isConfirmed) {
         this.http
           .delete(`${environment.URL}/api/products/${id}`, {
+            responseType: "json",
+          })
+          .subscribe((data) => {
+            this.ngOnInit();
+            this.crud = true;
+          });
+        Swal.fire("Deleted!", "Your file has been deleted.", "success");
+      }
+    });
+  }
+  addtype() {
+    Swal.fire({
+      input: "text",
+      inputLabel: "name of new type",
+      inputPlaceholder: "enter a type",
+    }).then((name) => {
+      console.log(name.value);
+
+      this.http
+        .post(
+          `${environment.URL}/api/type`,
+          { name: name.value },
+          {
+            responseType: "json",
+          }
+        )
+        .subscribe((data) => {
+          Swal.fire(`Done ${name.value}`);
+          this.ngOnInit();
+        });
+    });
+  }
+  updatetype(id) {
+    Swal.fire({
+      input: "text",
+      inputLabel: "name of new type",
+      inputPlaceholder: "enter a type",
+    }).then((name) => {
+      console.log(name.value);
+
+      this.http
+        .put(
+          `${environment.URL}/api/type/${id}`,
+          { name: name.value },
+          {
+            responseType: "json",
+          }
+        )
+        .subscribe((data) => {
+          Swal.fire(`Done ${name.value}`);
+          this.ngOnInit();
+        });
+    });
+  }
+  deletetype(id) {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.http
+          .delete(`${environment.URL}/api/type/${id}`, {
             responseType: "json",
           })
           .subscribe((data) => {

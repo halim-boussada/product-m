@@ -229,6 +229,7 @@
           class="w3-bar-item w3-button w3-hover-white"
           >Manage products</a
         >
+
         <a
           *ngIf="modify"
           (click)="toggleSeeForm()"
@@ -249,6 +250,12 @@
           onclick="w3_close()"
           class="w3-bar-item w3-button w3-hover-white"
           >Orders</a
+        >
+        <a
+          (click)="typee()"
+          onclick="w3_close()"
+          class="w3-bar-item w3-button w3-hover-white"
+          >Type</a
         >
         <a (click)="dis()" class="w3-bar-item w3-button w3-hover-white"
           >Disconnect</a
@@ -292,39 +299,60 @@
         <div class="w3-half" style="width: 100%;">
           <div *ngIf="crud">
             <div *ngIf="ad">
-              <!-- <div class="mb-3 row">
-    <label for="staticEmail" class="col-sm-2 col-form-label">Add</label>
-    <div class="col-sm-10">
-      <h1>Add product</h1>
-    </div>
-  </div>
-  <div class="mb-3 row">
-    <label for="inputPassword" class="col-sm-2 col-form-label">Name</label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control" id="inputPassword" #name />
-    </div>
-  </div>
-  <div class="mb-3 row">
-    <label for="inputPassword" class="col-sm-2 col-form-label">Image</label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control" id="inputPassword" #image />
-    </div>
-  </div>
-  <div class="mb-3 row">
-    <label for="inputPassword" class="col-sm-2 col-form-label"
-      >Desription</label
-    >
-    <div class="col-sm-10">
-      <input type="text" class="form-control" id="inputPassword" #desription />
-    </div>
-  </div> -->
-              <select #product>
+              <div class="mb-3 row">
+                <label for="staticEmail" class="col-sm-2 col-form-label"
+                  >Add</label
+                >
+                <div class="col-sm-10">
+                  <h1>Add product</h1>
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label for="inputPassword" class="col-sm-2 col-form-label"
+                  >Name</label
+                >
+                <div class="col-sm-10">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="inputPassword"
+                    #name
+                  />
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label for="inputPassword" class="col-sm-2 col-form-label"
+                  >Image</label
+                >
+                <div class="col-sm-10">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="inputPassword"
+                    #image
+                  />
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label for="inputPassword" class="col-sm-2 col-form-label"
+                  >Desription</label
+                >
+                <div class="col-sm-10">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="inputPassword"
+                    #desription
+                  />
+                </div>
+              </div>
+              <select #type>
                 <option *ngFor="let e of preproducts" value="{{e?.name}}"
                   >{{e?.name}}</option
                 >
               </select>
               <button
-                (click)="add(product.value)"
+                (click)="add({name : name.value , description : description.value , image : image.value  , type : type.value})"
                 class="w3-button w3-blue-gray w3-padding-large w3-hover-black"
               >
                 Add
@@ -530,7 +558,37 @@
             </table>
           </div>
         </div>
-
+        <div *ngIf="type">
+          <button
+            (click)="addtype()"
+            class="w3-button w3-blue-gray w3-padding-large w3-hover-black"
+          >
+            Add
+          </button>
+          <table>
+            <tr>
+              <th>type</th>
+              <th>Operations</th>
+            </tr>
+            <tr *ngFor="let i of preproducts">
+              <td>{{i?.name}}</td>
+              <td>
+                <button
+                  (click)="deletetype(i._id)"
+                  class="w3-button w3-red w3-padding-large w3-hover-black"
+                >
+                  Delete</button
+                ><button
+                  (click)="updatetype(i._id)"
+                  class="w3-button w3-blue-gray w3-padding-large w3-hover-black"
+                  style="margin-left: 10px;"
+                >
+                  Update
+                </button>
+              </td>
+            </tr>
+          </table>
+        </div>
         <div class="w3-half"></div>
       </div>
 
@@ -552,7 +610,7 @@
 
       <!-- Services -->
       <img
-        *ngIf="!orders && !see && !ad"
+        *ngIf="!orders && !see && !ad && !type"
         src="https://c1.wallpaperflare.com/preview/427/745/192/notebook-natural-laptop-macbook.jpg"
         alt="Jeans"
         style="width: 100%; height: 90vh;"

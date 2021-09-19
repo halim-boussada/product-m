@@ -6,7 +6,7 @@ var bodyParser = require("body-parser");
 const multer = require("multer");
 const Order = require("./database/order.js");
 const Product = require("./database/product.js");
-const PreProduct = require("./database/preProducts.js");
+const Type = require("./database/type.js");
 
 const Users = require("./database/users.js");
 
@@ -72,16 +72,29 @@ app.get("/api/findUser/:id", (req, res) => {
 });
 
 // pre products //
-app.get("/api/preproducts", (req, res) => {
-  PreProduct.find({}, function (error, result) {
+app.get("/api/type", (req, res) => {
+  Type.find({}, function (error, result) {
     if (error) console.log("this is error ====>", error);
     res.send(result);
   });
 });
-app.post("/api/preproducts", (req, res) => {
-  const newM = new PreProduct(req.body);
+app.post("/api/type", (req, res) => {
+  const newM = new Type(req.body);
+  console.log(req.body);
   newM.save((err, result) => {
     res.send({ body: "ok" });
+  });
+});
+app.put("/api/type/:id", (req, res) => {
+  Type.updateOne({ _id: req.params.id }, req.body, function (error, result) {
+    if (error) console.log("this is error ====>", error);
+    res.send({ result: "done" });
+  });
+});
+app.delete("/api/type/:id", (req, res) => {
+  Type.deleteOne({ _id: req.params.id }, function (error, result) {
+    if (error) console.log("this is error ====>", error);
+    res.send(result);
   });
 });
 // Crud Products //
